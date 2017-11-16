@@ -18,7 +18,7 @@
 
 # define BUFF_SIZE 10
 
-int 	get_next_line(const int fd, char **line);
-int 	ft_read_file(int fd, char  **string);
+int	get_next_line(const int fd, char **line);
+int	ft_read_file(int fd, char **string);
 
 #endif

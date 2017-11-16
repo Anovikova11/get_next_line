@@ -13,13 +13,17 @@
 #include "get_next_line.h"
 #include <stdio.h>
 
-int main(int argc, char **argv)
-{
-	int fd;
-	char *str;
-	int line;
+/*
+**FD is created after we open the file, it means we read particular file.
+*/
 
-	fd = open(argv[1], O_RDONLY); //FD is created after we open the file, it means we read particular file.
+int	main(int argc, char **argv)
+{
+	int	 fd;
+	char *str;
+	int	 line;
+
+	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
 		return (-1);
 	while ((line = get_next_line(fd, &str)) != 0)
