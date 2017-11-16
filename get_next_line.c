@@ -6,14 +6,14 @@
 /*   By: alnoviko <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/06 22:18:16 by alnoviko          #+#    #+#             */
-/*   Updated: 2017/11/06 22:18:19 by alnoviko         ###   ########.fr       */
+/*   Updated: 2017/11/14 15:43:21 by alnoviko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
 /*
-** Write a function that returns a line read from a file descriptor.
+** function that returns a line read from a file descriptor.
 ** The first parameter is the file descriptor that will be used to read.
 ** The second parameter is the address of a pointer to a character that will 
 be used to save the line read from the file descriptor.
@@ -28,10 +28,10 @@ int 	ft_read_file(int fd, char  **string)
 {
 	
 	char	*buf;
-	int		ret;
 	char 	*tmp;
+	int		ret;
 
-	buf = ft_strnew(BUFF_SIZE);
+	buf = ft_strnew(BUFF_SIZE + 1);
 	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
 		if (*string == NULL)
@@ -40,11 +40,11 @@ int 	ft_read_file(int fd, char  **string)
 		{
 			tmp = *string;
 			*string = ft_strjoin(*string, buf); // add next characters, if buf = 8, then 8 chars
-			ft_memdel((void**)&tmp);
+			ft_strdel(&tmp);
 		}
-		ft_bzero(buf, ft_strlen(buf)); // set buf to 0, so there are no more chars left in the buf.
+		ft_bzero(buf, BUFF_SIZE); // set buf to 0, so there are no more chars left in the buf.
 	}
-	ft_memdel((void**)&buf);
+	ft_strdel(&buf);
 	return (ret);
 }
 
@@ -54,35 +54,57 @@ int 	ft_read_file(int fd, char  **string)
 ** First found line = *line = part of string before '\0'.
 ** 3. Set a pointer to the begining of second line to skip first found line.
 ** 4. Itarate through string again to find a second line, ending with '\n'.
-** 4. What to do with OEF? 
+** 4. What to do with OEF? *line = str[fd]
 */
 
 int 	get_next_line(const int fd, char **line)
 {
 	char 			*ptr;
-	static char 	*string;
 	char 			*tmp;
-	
-    if (ft_read_file(fd, &string) < 0 || !line)
+	static char 	*string;
+
+    if (ft_read_file(fd, &string) < 0 || !line || !BUFF_SIZE)
     	return (-1);
 	if (*string && (ptr = ft_strchr(string, '\n'))) //take a part after first nl, and set a pointer to the first newline
 	{
 		tmp = string;
-		*ptr = '\0'; // str = '\n' = 0, set a pointer to a begining of a new line.
-		//*line = ft_strsub(string, 0, str - string);
+		*ptr = '\0';
 		*line = ft_strdup(string); //copy result before first newline to a line.
 		string = ft_strdup(ptr + 1); //start from first char of the second line.
-		ft_memdel((void**)&tmp);
-//		if (ft_strlen(string) == 0)
-//			ft_memdel((void**)string);
-		return (1);
+		ft_strdel(&tmp);
+			return (1);
 	}
-	if (*string)
+	if (*string && (ptr = ft_strchr(string, '\0')))
 	{
-		tmp = string;
-		*line = ft_strdup(string);
-		ft_memdel((void**)&tmp);
+		// tmp = string;
+		*line = ft_strdup(string); //copy result before EOF to a line.
+		string = ft_strdup(ptr);
+		// ft_strdel(&tmp);
 		return (1);
 	}
 	return (0);
 }
+
+// if (*string && (ptr = ft_strchr(string, '\n'))) //take a part after first nl, and set a pointer to the first newline
+// 	{
+// 		if (*ptr == '\n')//str = '\n' = 0, set a pointer to a begining of a new line.
+// 			{
+// 				ft_putstr("~~Newline found!\n");
+// 				*ptr = '\0';
+// 				tmp = string;
+// 				*line = ft_strdup(string); //copy result before first newline to a line.
+// 				string = ft_strdup(ptr + 1); //start from first char of the second line.
+// 				ft_memdel((void**)&tmp);
+// 				return (1);
+// 			}
+// 		else if (*ptr == '\0')
+// 		{
+// 			ft_putstr("--Terminator found!\n");
+// 			tmp = string;
+// 			*line = ft_strdup(string); //copy result before first newline to a line.
+// 			string = ft_strdup(ptr + 1); //start from first char of the second line.
+// 			ft_memdel((void**)&tmp);
+// 			return (1);
+// 		}
+// 	}
+
