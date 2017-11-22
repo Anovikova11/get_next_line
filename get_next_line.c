@@ -26,7 +26,7 @@ int	ft_read_file(int fd, char **string)
 	char	*tmp;
 	int		ret;
 
-	buf = ft_strnew(BUFF_SIZE + 1);
+	buf = ft_strnew(BUFF_SIZE);
 	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
 		if (*string == NULL)
@@ -58,7 +58,7 @@ int	get_next_line(const int fd, char **line)
 	char		*pointer;
 	char		*tmp;
 
-	if (ft_read_file(fd, &string[fd]) < 0 || !line || !BUFF_SIZE)
+	if (ft_read_file(fd, &string[fd]) < 0 || !line)
 		return (-1);
 	if ((pointer = ft_strchr(string[fd], '\n')))
 	{
