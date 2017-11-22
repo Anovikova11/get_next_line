@@ -14,14 +14,14 @@
 #include <stdio.h>
 
 /*
-**FD is created after we open the file, it means we read particular file.
+** FD is created after we open the file, it means we read particular file.
 */
 
 int	main(int argc, char **argv)
 {
-	int	 fd;
-	char *str;
-	int	 line;
+	int		fd;
+	char	*str;
+	int		line;
 
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
@@ -33,6 +33,6 @@ int	main(int argc, char **argv)
 		free(str);
 	}
 	printf("Return: %d\n", line);
-	close (fd);
+	close(fd);
 	return (0);
 }
